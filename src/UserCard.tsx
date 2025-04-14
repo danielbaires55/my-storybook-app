@@ -1,14 +1,36 @@
+import React, { useState } from 'react';
+import { Button } from './Button'; 
 
-type UserCardProps = {
-  name: string;
-  email: string;
-};
+interface UserCardProps {
+  name?: string;
+  email?: string;
+}
 
-export const UserCard: React.FC<UserCardProps> = ({ name, email }) => {
+export const UserCard: React.FC<UserCardProps> = ({ name = "Anonimo", email = "N/A" }) => {
+  const [confirmed, setConfirmed] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleConfirm = async () => {
+    setLoading(true);
+    await new Promise((resolve) => setTimeout(resolve, 2000)); 
+    setConfirmed(true);
+    setLoading(false);
+  };
+
   return (
-    <div style={{ border: '1px solid #ccc', padding: '1rem', borderRadius: '5px' }}>
-      <h2>{name}</h2>
+    <div style={{ border: "1px solid #ccc", padding: "1rem", borderRadius: "8px", maxWidth: "300px" }}>
+      <h3>{name}</h3>
       <p>{email}</p>
+
+      {!confirmed ? (
+        <Button
+          label={loading ? "Conferma in corso..." : "Conferma"}
+          onClick={handleConfirm}
+          disabled={loading}
+        />
+      ) : (
+        <p style={{ color: "green", marginTop: "1rem" }}>Utente confermato</p>
+      )}
     </div>
   );
-}
+};
